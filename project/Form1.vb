@@ -1,10 +1,10 @@
-Imports System.Data.SqlClient
+Imports System.Data.OleDb
 Public Class Form1
-    Dim con As SqlConnection
-    Dim cmd As SqlCommand
-    Dim dr As SqlDataReader
+    Dim con As OleDbConnection
+    Dim cmd As OleDbCommand
+    Dim dr As OleDbDataReader
     Dim ds As DataSet
-    Dim da As SqlDataAdapter
+    Dim da As OleDbDataAdapter
     Dim maxat As Integer
     Private Sub Label3_Click(sender As Object, e As EventArgs) Handles Label3.Click
         Me.Close()
@@ -23,9 +23,9 @@ Public Class Form1
             txtacc.Focus()
         Else
             Try
-                con = New SqlConnection("Data Source=JKWORLD\SQLEXPRESS2; Initial Catalog=atm; Integrated Security=True")
+                con = New OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\atm.accdb;")
                 con.Open()
-                cmd = New SqlCommand("select pin_no,acc_no,name,balance from Login where pin_no='" & pin & "'and acc_no='" & acc & "'", con)
+                cmd = New OleDbCommand("select pin_no, acc_no, name, balance from Login where pin_no=" & pin & " and acc_no=" & acc, con)
                 dr = cmd.ExecuteReader
                 If dr.Read Then
                     
