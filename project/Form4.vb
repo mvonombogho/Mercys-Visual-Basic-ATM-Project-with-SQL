@@ -1,8 +1,8 @@
-Imports System.Data.SqlClient
+Imports System.Data.OleDb
 Public Class Form4
-    Dim con As SqlConnection
-    Dim cmd As SqlCommand
-    Dim dr As SqlDataReader
+    Dim con As OleDbConnection
+    Dim cmd As OleDbCommand
+    Dim dr As OleDbDataReader
     Private Sub Form4_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
@@ -15,9 +15,9 @@ Public Class Form4
             pin = Val(Form1.txtpin.Text)
             acc = Val(Form1.txtacc.Text)
 
-            con = New SqlConnection("Data Source=JKWORLD\SQLEXPRESS2; Initial Catalog=atm; Integrated Security=True")
+            con = New OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\atm.accdb;")
             con.Open()
-            cmd = New SqlCommand("select pin_no,acc_no,name,balance from Login where pin_no='" & pin & "'and acc_no='" & acc & "'", con)
+            cmd = New OleDbCommand("select pin_no, acc_no, name, balance from Login where pin_no=" & pin & " and acc_no=" & acc, con)
             dr = cmd.ExecuteReader
             If dr.Read Then
 
