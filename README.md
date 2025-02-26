@@ -51,3 +51,24 @@ You can use the following credentials to test the application:
 - PIN: 1234, Account Number: 111
 - PIN: 5678, Account Number: 222
 - PIN: 9012, Account Number: 333
+
+## Troubleshooting
+
+### Common Issues
+- **Database Not Found**: Ensure the `atm.accdb` file is in the correct location. By default, it should be in the same folder as the executable (bin/Debug or bin/Release).
+- **Microsoft Access Database Engine Error**: You need to have Microsoft Access installed or the Microsoft Access Database Engine 2010 Redistributable. You can download it from the [Microsoft Download Center](https://www.microsoft.com/en-us/download/details.aspx?id=13255).
+- **Reference Missing**: If you get a reference error, make sure the project has a reference to `System.Data.OleDb`. You can add it by right-clicking on the project, selecting "Add Reference," and then selecting it from the .NET tab.
+- **Platform Target Issues**: If you're using a 64-bit system, you might need to set the platform target to x86. Right-click on the project, select "Properties," go to the "Compile" tab, click "Advanced Compile Options," and set the target CPU to x86.
+
+### Access Database Location
+This project uses the `|DataDirectory|` placeholder in the connection string, which typically points to the application's bin directory. If you're having trouble connecting to the database, try placing the `atm.accdb` file in the following locations:
+- The project's root directory
+- The bin/Debug directory
+- The bin/Release directory (if running in Release mode)
+
+## Technologies Used
+- Visual Basic .NET
+- Microsoft Access Database
+- ADO.NET with OleDb provider
+- Windows Forms
+- Microsoft Visual Studio
