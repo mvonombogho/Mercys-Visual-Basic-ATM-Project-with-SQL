@@ -39,3 +39,15 @@ There are two ways to set up the database:
    - name (Text)
    - balance (Number)
 4. Insert sample data as specified in the `AccessDBSetup.vbs` script
+
+### Building and Running the Project
+1. Open the solution file `project.sln` in Visual Studio 2010 or later
+2. Make sure the `atm.accdb` file is in the project directory or in your project's output directory
+3. Build the solution by pressing `F6` or selecting `Build > Build Solution` from the menu
+4. Run the application by pressing `F5` or clicking the green "Start" button
+
+### Sample Login Credentials
+You can use the following credentials to test the application:
+- PIN: 1234, Account Number: 111
+- PIN: 5678, Account Number: 222
+- PIN: 9012, Account Number: 333
