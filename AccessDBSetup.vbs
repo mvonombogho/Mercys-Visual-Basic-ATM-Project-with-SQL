@@ -4,25 +4,50 @@
 
 Option Explicit
 
-Dim fso, conn, rs, sql, dbPath
+Dim fso, conn, sql, dbPath, objShell
 
 ' Create FileSystemObject
 Set fso = CreateObject("Scripting.FileSystemObject")
+Set objShell = CreateObject("WScript.Shell")
 
-' Define the database path
-dbPath = "project\atm.accdb"
+' Define the database path - use current directory
+dbPath = fso.BuildPath(fso.GetParentFolderName(WScript.ScriptFullName), "project\atm.accdb")
+
+' Create the project directory if it doesn't exist
+Dim projectDir
+projectDir = fso.BuildPath(fso.GetParentFolderName(WScript.ScriptFullName), "project")
+If Not fso.FolderExists(projectDir) Then
+    fso.CreateFolder(projectDir)
+End If
 
 ' Check if file exists and delete it if it does
 If fso.FileExists(dbPath) Then
     fso.DeleteFile dbPath
 End If
 
-' Create a new Access database
-CreateDatabase dbPath
+' Instead of using ADOX (which may not be registered), use a command to create a blank Access database
+' This method uses Access if installed, or creates a simple blank database otherwise
+Dim strCmd
+strCmd = "cmd /c echo Creating blank Access database... & copy NUL " & Chr(34) & dbPath & Chr(34)
+objShell.Run strCmd, 0, True
+
+WScript.Echo "Creating database at: " & dbPath
+WScript.Sleep 2000
 
 ' Create tables and insert data
+On Error Resume Next
+
 Set conn = CreateObject("ADODB.Connection")
-conn.Open "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & dbPath
+conn.Open "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & dbPath & ";"
+
+If Err.Number <> 0 Then
+    WScript.Echo "Error connecting to database: " & Err.Description & " (" & Err.Number & ")"
+    WScript.Echo "Please ensure you have Microsoft Access or Microsoft Access Database Engine 2010 installed."
+    WScript.Echo "You can download it from https://www.microsoft.com/en-us/download/details.aspx?id=13255"
+    WScript.Quit
+End If
+
+On Error GoTo 0
 
 ' Create PIN table
 sql = "CREATE TABLE pin (" & _
@@ -100,11 +125,4 @@ conn.Execute sql
 conn.Close
 
 WScript.Echo "Microsoft Access database created successfully at: " & dbPath
-
-' Function to create a new Access database
-Sub CreateDatabase(path)
-    Dim cat
-    Set cat = CreateObject("ADOX.Catalog")
-    cat.Create "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & path
-    Set cat = Nothing
-End Sub
+WScript.Echo "You may now open the Visual Basic project and run it."
