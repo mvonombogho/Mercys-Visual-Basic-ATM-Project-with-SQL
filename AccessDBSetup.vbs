@@ -1,10 +1,12 @@
 ' Microsoft Access Database Setup Script for ATM Project
 ' This script creates an Access database with the required tables
 ' and sample data for the ATM project
+' Optimized for Microsoft 365 Access
 
 Option Explicit
 
 Dim fso, conn, sql, dbPath, objShell
+Dim strAccess, isSuccess
 
 ' Create FileSystemObject
 Set fso = CreateObject("Scripting.FileSystemObject")
@@ -25,14 +27,48 @@ If fso.FileExists(dbPath) Then
     fso.DeleteFile dbPath
 End If
 
-' Instead of using ADOX (which may not be registered), use a command to create a blank Access database
-' This method uses Access if installed, or creates a simple blank database otherwise
-Dim strCmd
-strCmd = "cmd /c echo Creating blank Access database... & copy NUL " & Chr(34) & dbPath & Chr(34)
-objShell.Run strCmd, 0, True
+' Try to create the database using Microsoft 365 Access if it's installed
+isSuccess = False
+
+' Method 1: Try to use Access automation to create the database
+On Error Resume Next
+Dim objAccess
+Set objAccess = CreateObject("Access.Application")
+If Err.Number = 0 Then
+    WScript.Echo "Using Microsoft 365 Access to create the database..."
+    objAccess.NewCurrentDatabase dbPath
+    objAccess.Visible = False
+    WScript.Sleep 2000 ' Give Access time to create the file
+    objAccess.Quit
+    Set objAccess = Nothing
+    isSuccess = True
+End If
+On Error GoTo 0
+
+' Method 2: If Access automation failed, try using ADOX if it's available
+If Not isSuccess Then
+    On Error Resume Next
+    Dim cat
+    Set cat = CreateObject("ADOX.Catalog")
+    If Err.Number = 0 Then
+        WScript.Echo "Using ADOX to create the database..."
+        cat.Create "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & dbPath
+        Set cat = Nothing
+        isSuccess = True
+    End If
+    On Error GoTo 0
+End If
+
+' Method 3: If both methods above failed, try using a blank file as a template
+If Not isSuccess Then
+    WScript.Echo "Creating empty database file..."
+    Dim strCmd
+    strCmd = "cmd /c echo Creating blank Access database... & copy NUL " & Chr(34) & dbPath & Chr(34)
+    objShell.Run strCmd, 0, True
+End If
 
 WScript.Echo "Creating database at: " & dbPath
-WScript.Sleep 2000
+WScript.Sleep 1000
 
 ' Create tables and insert data
 On Error Resume Next
@@ -42,12 +78,14 @@ conn.Open "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & dbPath & ";"
 
 If Err.Number <> 0 Then
     WScript.Echo "Error connecting to database: " & Err.Description & " (" & Err.Number & ")"
-    WScript.Echo "Please ensure you have Microsoft Access or Microsoft Access Database Engine 2010 installed."
+    WScript.Echo "Even though you have Microsoft 365 Access installed, you might need the Access Database Engine."
     WScript.Echo "You can download it from https://www.microsoft.com/en-us/download/details.aspx?id=13255"
     WScript.Quit
 End If
 
 On Error GoTo 0
+
+WScript.Echo "Successfully connected to the database. Creating tables..."
 
 ' Create PIN table
 sql = "CREATE TABLE pin (" & _
