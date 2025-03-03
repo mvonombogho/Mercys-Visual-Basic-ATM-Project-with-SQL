@@ -1,0 +1,68 @@
+MANUAL STEPS TO CREATE THE MICROSOFT ACCESS DATABASE
+
+Since you're having issues with the script, here are manual steps to create the database in Microsoft 365 Access:
+
+1. Open Microsoft 365 Access
+
+2. Create a new blank database:
+   - Click on "Blank database" in the Access start screen
+   - Name it "atm.accdb" and save it in the "project" folder of your ATM project
+
+3. Create the PIN table:
+   - Click "Create" tab → "Table Design"
+   - Add these fields:
+     • pin_no (Data Type: Number)
+     • acc_no (Data Type: Number)
+   - Save the table as "pin"
+
+4. Enter data in the PIN table:
+   - Open the PIN table in Datasheet view
+   - Enter the following records:
+     • 1234, 55555
+     • 5678, 66666
+     • 3456, 00000
+     • 6789, 11111
+
+5. Create the Login table:
+   - Click "Create" tab → "Table Design"
+   - Add these fields:
+     • pin_no (Data Type: Number)
+     • acc_no (Data Type: Number)
+     • name (Data Type: Short Text, Field Size: 40)
+     • balance (Data Type: Number)
+   - Save the table as "Login"
+
+6. Enter data in the Login table:
+   - Open the Login table in Datasheet view
+   - Enter the following records:
+     • 1234, 111, "Asha", 11000
+     • 2345, 325, "Asha", 23456
+     • 3456, 756, "denny", 46563
+     • 4567, 575, "ken", 56356
+     • 5678, 222, "Kenn", 11000
+     • 6789, 223, "disha", 98989
+     • 7890, 224, "sammi", 91000
+     • 8901, 225, "ketan", 6795687
+     • 9012, 333, "Denny", 11000
+     • 1470, 444, "Pihu", 11000
+     • 2580, 555, "Agrima", 11000
+     • 3690, 666, "Arushi", 11000
+     • 1111, 777, "Ayushri", 16000
+     • 2222, 728, "daizy", 1111
+     • 3333, 567, "Louis", 2345
+     • 4444, 888, "Lewis", 4776
+     • 5555, 646, "gucci", 3333
+     • 6666, 967, "parada", 9047
+     • 7777, 343, "tommy", 7465
+     • 8888, 636, "elena", 798749
+     • 9999, 434, "demon", 6584
+     • 0000, 234, "stefan", 5664676
+     • 8989, 123, "won injae", 98777
+
+7. Close Microsoft Access
+
+8. Make sure the atm.accdb file is in the project folder of your ATM application
+
+9. Open the Visual Basic project and run it
+
+The Visual Basic application should now be able to connect to your database.
